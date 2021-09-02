@@ -39,8 +39,8 @@ while sala <9:
             print("[1] -  Caminho Preto")
             print("[2] -  Caminho Vermelho")
         count +=1
-    if sala == 9 and count <=7:
-        print("Dounge Concluida!\n YOU WIN")
-    elif sala == 9 and count >7:
-        print("Voces chegaram ao ultima sala, porém demoraram muito, tudo desmoronou e vocês morream\n Parabéns você matou toda a guilda")
+if sala == 9 and count <=7:
+    print("Dounge Concluida!\n YOU WIN")
+elif sala == 9 and count >7:
+    print("Voces chegaram ao ultima sala, porém demoraram muito, tudo desmoronou e vocês morream\n Parabéns você matou toda a guilda")
     
