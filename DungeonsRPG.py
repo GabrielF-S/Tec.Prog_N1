@@ -1,46 +1,110 @@
+# --- Imports --- #
 import random
-count = 0
-sala = 1
 
-while sala <9:
+
+# --- Constants --- #
+MAX_INTERACTIONS = 7
+PORTAL_ROOM = -1
+VICTORY_ROOM = 9
+INVALID_ROOM = 0
+DUNGEON_MAP = {
+    1: [3, 2],
+    2: [4, 3],
+    3: [5, 4],
+    4: [6, 5],
+    5: [7, 6],
+    6: [8, INVALID_ROOM],
+    7: [VICTORY_ROOM, 8],
+    8: [PORTAL_ROOM, VICTORY_ROOM]
+}
+
+
+# --- Global Variables --- #
+interactions = 0
+currentRoom = 1
+
+
+# --- Functions --- #
+def informLocationContext():
+    print("Você está na sala {}".format(currentRoom))
+    print("Ainda restam {}".format(MAX_INTERACTIONS - interactions))
+    print("Pode seguir para: ")
+    print(DUNGEON_MAP[currentRoom][0], " - Esquerda")
+    print(DUNGEON_MAP[currentRoom][1], " - Direita")
+
+
+def roomTransition(turnsRight):
+    global interactions
+    global currentRoom
     
-    print("vc esta na sala {}".format(sala))
-    print ("escolha seu caminho:")
-    if sala == 6:
-        print("[1] -  Caminho Preto")
-        
-    elif sala == 8:
-        print("[1] -  Caminho ?")
-        print("[2] -  Caminho Vermelho")
+    if turnsRight:
+        currentRoom = DUNGEON_MAP[currentRoom][1]
     else:
-        print("[1] -  Caminho Preto")
-        print("[2] -  Caminho Vermelho")
-    caminho = int(input())
+        currentRoom = DUNGEON_MAP[currentRoom][0]
+    interactions += 1
 
-    if caminho == 1 and sala !=6 and sala !=8:
-        sala += 1
-    elif caminho == 2 or sala == 6:
-        sala+=2
-    elif sala == 8:
-        if caminho == 2:
-            sala+=1
-        elif caminho ==1:
-            sala= random.randint(1,5)
 
-    while caminho !=1 and caminho !=2:
-        print("vc esta na sala {}".format(sala))
-        print ("escolha seu caminho:")
-        if sala == 6:
-            print("[1] -  Caminho Preto")
-        elif sala == 8:
-            print("[1] -  Caminho ?")
-            print("[2] -  Caminho Vermelho")
+def queryRoom():
+    query = ""
+    while(True):
+        query = input("\nQual sala deseja ir?: ").lower()
+        if query != "esquerda" and query != "direita" :
+            print("Escolha Incorreta, digite denovo")
+            continue
+        elif DUNGEON_MAP[currentRoom][query == "direita"] == INVALID_ROOM:
+            print("\n***Verificando no mapa***\n")
+            print("Esta sala não aparece no mapa, melhor tentar por outro caminho")
+            continue
         else:
-            print("[1] -  Caminho Preto")
-            print("[2] -  Caminho Vermelho")
-        count +=1
-if sala == 9 and count <=7:
-    print("Dounge Concluida!\n YOU WIN")
-elif sala == 9 and count >7:
-    print("Voces chegaram ao ultima sala, porém demoraram muito, tudo desmoronou e vocês morream\n Parabéns você matou toda a guilda")
-    
+            break
+    return query == "direita"
+
+
+def handleSpecialCases():
+    global currentRoom
+
+    if (interactions >= MAX_INTERACTIONS):
+        print("Seu tempo acabou. As rochas cobriram sua única saída. Seu grupo morreu de fome.")
+        return True
+
+    if (currentRoom == PORTAL_ROOM):
+        print("Você entrou no portal de distorção espaço-temporal!")
+        currentRoom = random.randint(1, 5)
+    elif (currentRoom == VICTORY_ROOM):
+        print("Você alcançou a sala final! Parabéns!")
+        return True
+
+    return False
+
+
+def gameLoop():
+    while (True):
+        informLocationContext()
+        roomTransition(queryRoom())
+        if (handleSpecialCases()):
+            break
+
+def starGame():
+    print(r"""                   ,  ,
+                   \\ \\
+                   ) \\ \\    _p_
+                   )^\))\))  /  *\
+                    \_|| || / /^`-'
+           __       -\ \\--/ /
+         <'  \\___/   ___. )'
+              `====\ )___/\\
+                   //     `"
+                   \\    /  \
+                   `" +========+
+UAM                   |Hawkin  |
+    Vision            |Cesar   |
+          Apresent    |RPG     |
+                      '''''''""")
+    print("Star Game?")
+    print("0 - Sim\n1 - Não")
+    star= input()
+
+
+# --- Main Calls/External Calls --- #
+starGame()
+gameLoop()
